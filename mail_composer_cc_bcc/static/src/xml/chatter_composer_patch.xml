@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_composer_cc_bcc.Composer" t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Composer-inputContainer')][.//label[contains(., 'To')]]" position="after">
+            <t t-if="composer.hasCcBcc">
+                <div class="o-mail-Composer-inputContainer">
+                    <label class="o-mail-Composer-label">Cc</label>
+                    <Field name="partner_cc_ids" record="props.composer" widget="many2many_tags_email"/>
+                </div>
+                <div class="o-mail-Composer-inputContainer">
+                    <label class="o-mail-Composer-label">Bcc</label>
+                    <Field name="partner_bcc_ids" record="props.composer" widget="many2many_tags_email"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

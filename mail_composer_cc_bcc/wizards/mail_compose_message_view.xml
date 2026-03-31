@@ -5,16 +5,21 @@
         <field name="model">mail.compose.message</field>
         <field name="inherit_id" search="[('model', '=', 'mail.compose.message'), ('type', '=', 'form'), ('mode', '=', 'primary')]" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="string">To</attribute>
+            </xpath>
             <xpath expr="//field[@name='partner_ids']" position="after">
                 <field
                     name="partner_cc_ids"
+                    string="Cc"
                     widget="many2many_tags_email"
-                    invisible="composition_mode == 'mass_mail' or composition_mode == 'mass_post' or composition_mode == 'note'"
+                    invisible="composition_mode != 'comment'"
                 />
                 <field
                     name="partner_bcc_ids"
+                    string="Bcc"
                     widget="many2many_tags_email"
-                    invisible="composition_mode == 'mass_mail' or composition_mode == 'mass_post' or composition_mode == 'note'"
+                    invisible="composition_mode != 'comment'"
                 />
             </xpath>
         </field>

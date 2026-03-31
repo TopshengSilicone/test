@@ -32,17 +32,27 @@ class TestMailComposerCcBcc(common.SavepointCase):
             }
         )
 
-    def _new_composer(self):
+    def _new_composer(self, mode="comment"):
         return self.env["mail.compose.message"].with_context(
             default_model="res.partner",
             default_res_ids=[self.partner_to.id],
-            default_composition_mode="comment",
-        ).create({"partner_ids": [(6, 0, self.partner_to.ids)]})
+            default_composition_mode=mode,
+        ).create(
+            {
+                "composition_mode": mode,
+                "partner_ids": [(6, 0, self.partner_to.ids)],
+            }
+        )
 
-    def test_company_defaults_loaded_in_composer(self):
-        wizard = self._new_composer()
+    def test_company_defaults_loaded_in_send_message(self):
+        wizard = self._new_composer(mode="comment")
         self.assertEqual(wizard.partner_cc_ids, self.partner_cc)
         self.assertEqual(wizard.partner_bcc_ids, self.partner_bcc)
+
+    def test_company_defaults_not_loaded_in_log_note(self):
+        wizard = self._new_composer(mode="note")
+        self.assertFalse(wizard.partner_cc_ids)
+        self.assertFalse(wizard.partner_bcc_ids)
 
     def test_template_applies_cc_bcc_partners(self):
         wizard = self._new_composer()
@@ -68,9 +78,17 @@ class TestMailComposerCcBcc(common.SavepointCase):
     def test_cc_not_merged_into_main_recipients(self):
         wizard = self._new_composer()
         wizard.email_to = "to@example.com"
-        recipients = wizard._get_mail_recipients()
-        self.assertIn(self.partner_to, recipients)
-        self.assertNotIn(self.partner_cc, recipients)
+        values = wizard._prepare_mail_values([self.partner_to.id])[self.partner_to.id]
+        self.assertEqual(values["email_cc"], "cc@example.com")
+        self.assertEqual(values["email_bcc"], "bcc@example.com")
+
+    def test_duplicate_recipient_prevention(self):
+        wizard = self._new_composer()
+        wizard.partner_cc_ids = [(6, 0, [self.partner_to.id, self.partner_cc.id])]
+        wizard.partner_bcc_ids = [(6, 0, [self.partner_cc.id, self.partner_bcc.id])]
+        values = wizard._prepare_mail_values([self.partner_to.id])[self.partner_to.id]
+        self.assertEqual(values["email_cc"], "cc@example.com")
+        self.assertEqual(values["email_bcc"], "bcc@example.com")
 
     def test_send_without_cc_bcc(self):
         wizard = self._new_composer()

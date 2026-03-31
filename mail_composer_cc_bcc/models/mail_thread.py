@@ -22,24 +22,12 @@ class MailThread(models.AbstractModel):
         if self.env.context.get("mail_notify_no_cc_bcc"):
             return mail_values
 
+        to_emails = set(email_split(mail_values.get("email_to") or ""))
         cc_emails = [email for email in message.recipient_cc_ids.mapped("email") if email]
         bcc_emails = [email for email in message.recipient_bcc_ids.mapped("email") if email]
 
-        ctx_cc_ids = self.env.context.get("partner_cc_ids") or []
-        ctx_bcc_ids = self.env.context.get("partner_bcc_ids") or []
-        cc_emails += [
-            email
-            for email in self.env["res.partner"].browse(ctx_cc_ids).mapped("email")
-            if email
-        ]
-        bcc_emails += [
-            email
-            for email in self.env["res.partner"].browse(ctx_bcc_ids).mapped("email")
-            if email
-        ]
-
-        cc_emails = list(dict.fromkeys(email_split(",".join(cc_emails))))
-        bcc_emails = list(dict.fromkeys(email_split(",".join(bcc_emails))))
+        cc_emails = [e for e in dict.fromkeys(email_split(",".join(cc_emails))) if e and e not in to_emails]
+        bcc_emails = [e for e in dict.fromkeys(email_split(",".join(bcc_emails))) if e and e not in to_emails and e not in cc_emails]
 
         if cc_emails:
             mail_values["email_cc"] = ",".join(cc_emails)
