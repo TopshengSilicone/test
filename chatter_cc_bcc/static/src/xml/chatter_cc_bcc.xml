@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="chatter_cc_bcc.Chatter" t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o-mail-Chatter-top') or contains(@class, 'o_ChatterTopbar')]/following-sibling::div[1]" position="before">
+            <div class="o_cc_bcc_row d-flex flex-column gap-1 px-2 pb-1" t-if="state.composerType === 'message'">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="o-mail-Label mb-0" style="min-width: 40px;">CC:</label>
+                    <input
+                        class="form-control form-control-sm"
+                        type="text"
+                        placeholder="name1@email.com; name2@email.com"
+                        t-on-input="onInputCc"
+                        t-att-value="ccBccState.cc"
+                    />
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="o-mail-Label mb-0" style="min-width: 40px;">BCC:</label>
+                    <input
+                        class="form-control form-control-sm"
+                        type="text"
+                        placeholder="name1@email.com; name2@email.com"
+                        t-on-input="onInputBcc"
+                        t-att-value="ccBccState.bcc"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
