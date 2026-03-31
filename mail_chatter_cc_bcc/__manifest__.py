@@ -1,7 +1,7 @@
 {
     "name": "Chatter CC/BCC",
     "version": "19.0.1.0.0",
-    "summary": "Add CC recipients in chatter and Send Message composer",
+    "summary": "Add Gmail-like CC/BCC in chatter and Send Message composer",
     "category": "Discuss",
     "author": "Custom",
     "license": "LGPL-3",

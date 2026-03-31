@@ -3,9 +3,12 @@
 import { patch } from "@web/core/utils/patch";
 import { Composer as ComposerModel } from "@mail/core/common/composer_model";
 
-function addCc(params, composer) {
+function addCcBcc(params, composer) {
     if (composer.ccEmails) {
         params.email_cc = composer.ccEmails;
+    }
+    if (composer.bccEmails) {
+        params.email_bcc = composer.bccEmails;
     }
     return params;
 }
@@ -13,16 +16,17 @@ function addCc(params, composer) {
 patch(ComposerModel.prototype, {
     getMessagePostParams() {
         const params = super.getMessagePostParams(...arguments);
-        return addCc(params, this);
+        return addCcBcc(params, this);
     },
 
     getMessageData() {
         const data = super.getMessageData(...arguments);
-        return addCc(data, this);
+        return addCcBcc(data, this);
     },
 
     clear() {
         super.clear(...arguments);
         this.ccEmails = "";
+        this.bccEmails = "";
     },
 });
