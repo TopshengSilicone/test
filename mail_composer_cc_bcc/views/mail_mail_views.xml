@@ -3,7 +3,7 @@
     <record id="view_mail_mail_form_cc_bcc" model="ir.ui.view">
         <field name="name">mail.mail.form.cc.bcc</field>
         <field name="model">mail.mail</field>
-        <field name="inherit_id" search="[('model', '=', 'mail.mail'), ('type', '=', 'form'), ('mode', '=', 'primary')]" />
+        <field name="inherit_id" ref="mail.view_mail_mail_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email_cc']" position="after">
                 <field name="email_bcc"/>

@@ -3,7 +3,7 @@
     <record id="view_mail_message_form_cc_bcc" model="ir.ui.view">
         <field name="name">mail.message.form.cc.bcc</field>
         <field name="model">mail.message</field>
-        <field name="inherit_id" search="[('model', '=', 'mail.message'), ('type', '=', 'form'), ('mode', '=', 'primary')]" />
+        <field name="inherit_id" ref="mail.view_message_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_ids']" position="after">
                 <field name="recipient_cc_ids" widget="many2many_tags_email"/>

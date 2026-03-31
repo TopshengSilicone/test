@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_composer_cc_bcc.Composer" t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//Field[@name='partner_ids']" position="after">
+            <t t-if="composer.composerType === 'message'">
+                <Field name="partner_cc_ids"/>
+                <Field name="partner_bcc_ids"/>
+            </t>
+        </xpath>
+    </t>
+</templates>
